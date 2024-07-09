@@ -4,45 +4,47 @@ import { useState } from "react";
 
 import { api } from "~/trpc/react";
 
-export function LatestPost() {
-  const [latestPost] = api.post.getLatest.useSuspenseQuery();
+export function LatestQuestions() {
+  // const [latestQuestions] = api.question.getLatestQuestions.useSuspenseQuery();
 
   const utils = api.useUtils();
-  const [name, setName] = useState("");
-  const createPost = api.post.create.useMutation({
+  const [question, setQuestion] = useState("");
+  const createQuestion = api.question.createQuestion.useMutation({
     onSuccess: async () => {
-      await utils.post.invalidate();
-      setName("");
+      await utils.question.invalidate();
+      setQuestion("");
     },
   });
 
   return (
     <div className="w-full max-w-xs">
-      {latestPost ? (
-        <p className="truncate">Your most recent post: {latestPost.name}</p>
+      {/* {latestQuestions ? (
+        latestQuestions.map((q) => (
+          <p className="truncate">Your most recent post: {q.question}</p>
+        ))
       ) : (
         <p>You have no posts yet.</p>
-      )}
+      )} */}
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          createPost.mutate({ name });
+          createQuestion.mutate({ question });
         }}
         className="flex flex-col gap-2"
       >
         <input
           type="text"
           placeholder="Title"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
           className="w-full rounded-full px-4 py-2 text-black"
         />
         <button
           type="submit"
           className="rounded-full bg-white/10 px-10 py-3 font-semibold transition hover:bg-white/20"
-          disabled={createPost.isPending}
+          disabled={createQuestion.isPending}
         >
-          {createPost.isPending ? "Submitting..." : "Submit"}
+          {createQuestion.isPending ? "Submitting..." : "Submit"}
         </button>
       </form>
     </div>
