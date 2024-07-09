@@ -5,10 +5,10 @@ import { getServerAuthSession } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
 
 export default async function Home() {
-  const hello = await api.post.hello({ text: "from tRPC" });
-  const session = await getServerAuthSession();
+  void api.question.getAllAnsweredQuestions.prefetch();
 
-  void api.post.getLatest.prefetch();
+  const questions = await api.question.getAllAnsweredQuestions();
+  const session = await getServerAuthSession();
 
   return (
     <HydrateClient>
@@ -42,9 +42,14 @@ export default async function Home() {
             </Link>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              {hello ? hello.greeting : "Loading tRPC query..."}
-            </p>
+            {questions.length &&
+              questions.map(({ id, question, answer }) => (
+                <p key={id} className="text-2xl text-white">
+                  Question: {question}
+                  <br />
+                  Answer: {answer}
+                </p>
+              ))}
 
             <div className="flex flex-col items-center justify-center gap-4">
               <p className="text-center text-2xl text-white">
