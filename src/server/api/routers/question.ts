@@ -9,7 +9,22 @@ import {
 export const questionRouter = createTRPCRouter({
   getAllAnsweredQuestions: publicProcedure.query(() => {
     const answeredQuestions = [
-      { id: 1, question: "how are you?", answer: "i am fine" },
+      {
+        id: 1,
+        question: "How are you?",
+        answer:
+          "Just the basics - Everything you need to know to set up your database and authentication",
+      },
+      {
+        id: 2,
+        question: "Are you the best?",
+        answer: "No i am not the best i am just a normal person",
+      },
+      {
+        id: 3,
+        question: "Is the sky blue?",
+        answer: "Yes the sky is blue during the day but not at night",
+      },
     ];
     return answeredQuestions;
   }),
