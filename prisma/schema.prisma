@@ -75,8 +75,8 @@ model Question {
     question       String
     answer         String?
     status         AnswerStatus @default(NOT_ANSWERED)
-    answeredBy     User         @relation("Answered", fields: [answeredUserId], references: [id])
-    answeredUserId String
+    answeredBy     User?        @relation("Answered", fields: [answeredUserId], references: [id])
+    answeredUserId String?
     createdBy      User?        @relation("Created", fields: [createdById], references: [id])
     createdById    String?
     createdAt      DateTime     @default(now())
