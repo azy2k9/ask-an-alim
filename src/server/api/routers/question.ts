@@ -7,25 +7,16 @@ import {
 } from "~/server/api/trpc";
 
 export const questionRouter = createTRPCRouter({
-  getAllAnsweredQuestions: publicProcedure.query(() => {
-    const answeredQuestions = [
-      {
-        id: 1,
-        question: "How are you?",
-        answer:
-          "Just the basics - Everything you need to know to set up your database and authentication",
+  getAllAnsweredQuestions: publicProcedure.query(async ({ ctx }) => {
+    const answeredQuestions = await ctx.db.question.findMany({
+      where: {
+        status: "ANSWERED",
       },
-      {
-        id: 2,
-        question: "Are you the best?",
-        answer: "No i am not the best i am just a normal person",
+      orderBy: {
+        updatedAt: "desc",
       },
-      {
-        id: 3,
-        question: "Is the sky blue?",
-        answer: "Yes the sky is blue during the day but not at night",
-      },
-    ];
+    });
+
     return answeredQuestions;
   }),
 
