@@ -1,3 +1,4 @@
+import { AnswerStatus, Question } from "@prisma/client";
 import { z } from "zod";
 
 import {
@@ -5,6 +6,7 @@ import {
   // protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+import { type AnsweredQuestions } from "~/types";
 
 export const questionRouter = createTRPCRouter({
   getAllAnsweredQuestions: publicProcedure.query(async ({ ctx }) => {
@@ -17,7 +19,7 @@ export const questionRouter = createTRPCRouter({
       },
     });
 
-    return answeredQuestions;
+    return answeredQuestions as AnsweredQuestions;
   }),
 
   createQuestion: publicProcedure
