@@ -7,36 +7,34 @@ import React, { useEffect, useState } from "react";
 type Props = {
   type: "success" | "error";
   message: string;
+  open: boolean;
 };
 
-const Notificaition = ({ type, message }: Props) => {
-  const [isShowing, setIsShowing] = useState(true);
+const Notificaition = ({ type, message, open }: Props) => {
+  const [isShowing, setIsShowing] = useState(open);
 
   useEffect(() => {
     setTimeout(() => {
       setIsShowing(false);
-    }, 6000);
+    }, 2500);
   }, [isShowing]);
 
   return (
-    <div
-      className={clsx(
-        "size-full rounded-xl bg-white shadow-lg transition duration-400",
-        "data-[closed]:scale-50 data-[closed]:rotate-[-120deg] data-[closed]:opacity-0",
-        "data-[leave]:duration-200 data-[leave]:ease-in-out",
-        "data-[leave]:data-[closed]:scale-95 data-[leave]:data-[closed]:rotate-[0deg]",
-      )}
+    <Transition
+      show={isShowing}
+      enter="transition-opacity duration-200"
+      enterFrom="opacity-0"
+      enterTo="opacity-100"
+      leave="transition-opacity duration-500"
+      leaveFrom="opacity-100"
+      leaveTo="opacity-0"
     >
-      <Transition show={isShowing}>
-        <div className="z-10">
-          <div
-            className={`absolute p-4 ${type === "success" ? "bg-green-700" : "bg-red-700"} bottom-4 right-4 rounded`}
-          >
-            {message}
-          </div>
-        </div>
-      </Transition>
-    </div>
+      <div
+        className={`absolute p-4 ${type === "success" ? "bg-green-700" : "bg-red-700"} bottom-4 right-4 rounded`}
+      >
+        {message}
+      </div>
+    </Transition>
   );
 };
 

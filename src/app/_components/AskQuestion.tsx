@@ -8,6 +8,7 @@ import {
   DialogPanel,
   DialogTitle,
   Textarea,
+  Transition,
 } from "@headlessui/react";
 import clsx from "clsx";
 import { api } from "~/trpc/react";
@@ -33,28 +34,25 @@ export default function AskQuestion() {
     console.log({ isPending, isSuccess, error });
   }, [isPending, isSuccess, error]);
 
-  if (isSuccess) {
-    setTimeout(() => console.log("hold"), 2000);
-    return "We are loading the page...";
-  }
-
-  if (!isSuccess && error) console.log("Error posting message: ", error);
   return (
     <>
-      <Notificaition
-        message={
-          !error
-            ? "Error asking question, please try again!"
-            : "Successfully asked question!"
-        }
-        type={isSuccess ? "success" : "error"}
-      />
       <Button
         onClick={() => setOpen((prev) => !prev)}
         className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
       >
         Ask a question
       </Button>
+      {isSuccess && (
+        <Notificaition
+          open={isSuccess}
+          message={
+            !error
+              ? "Error asking question, please try again!"
+              : "Successfully asked question!"
+          }
+          type={isSuccess ? "success" : "error"}
+        />
+      )}
       <Dialog
         open={open}
         onClick={() => setOpen((prev) => !prev)}
@@ -98,7 +96,12 @@ export default function AskQuestion() {
                 <button
                   type="button"
                   onClick={() => askQuestion({ question })}
-                  className="inline-flex w-full justify-center rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500 sm:ml-3 sm:w-auto"
+                  disabled={question.length === 0}
+                  className={
+                    question.length === 0
+                      ? "inline-flex w-full justify-center rounded-md bg-gray-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 sm:ml-3 sm:w-auto"
+                      : "inline-flex w-full justify-center rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500 sm:ml-3 sm:w-auto"
+                  }
                 >
                   Ask
                 </button>
