@@ -1,11 +1,6 @@
-import { AnswerStatus, Question } from "@prisma/client";
 import { z } from "zod";
 
-import {
-  createTRPCRouter,
-  // protectedProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 import { type AnsweredQuestions } from "~/types";
 
 export const questionRouter = createTRPCRouter({
@@ -25,15 +20,14 @@ export const questionRouter = createTRPCRouter({
   createQuestion: publicProcedure
     .input(z.object({ question: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // return ctx.db.question.create({
-      //   data: {
-      //     question: input.question,
-      //     createdBy: { connect: { id: ctx.session?.user.id } },
-      //   },
-      // });
+      return ctx.db.question.create({
+        data: {
+          question: input.question,
+          createdBy: ctx.session?.user.id
+            ? { connect: { id: ctx.session?.user.id } }
+            : undefined,
+        },
+      });
     }),
 
   // getLatestQuestions: protectedProcedure.query(({ ctx }) => {

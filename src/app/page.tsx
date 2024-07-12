@@ -1,9 +1,8 @@
 import Link from "next/link";
-
-// import { LatestQuestions } from "~/app/_components/question";
 import { getServerAuthSession } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
 import QAndA from "./_components/QAndA";
+import AskQuestion from "./_components/AskQuestion";
 
 export default async function Home() {
   void api.question.getAllAnsweredQuestions.prefetch();
@@ -18,6 +17,7 @@ export default async function Home() {
           <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
             Ask <span className="text-[hsl(280,100%,70%)]">An</span> Alim
           </h1>
+          <AskQuestion />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
             {questions.length ? (
               questions.map((q) => (
