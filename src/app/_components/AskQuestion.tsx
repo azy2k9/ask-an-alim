@@ -14,7 +14,7 @@ import { api } from "~/trpc/react";
 import Notificaition from "./Notificaition";
 
 export default function AskQuestion() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [question, setQuestion] = useState("");
 
   const {
