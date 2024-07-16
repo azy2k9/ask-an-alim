@@ -1,7 +1,6 @@
 "use client";
 
 import { Transition } from "@headlessui/react";
-import clsx from "clsx";
 import React, { useEffect, useState } from "react";
 
 type Props = {
