@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Button,
   Dialog,
@@ -8,7 +8,6 @@ import {
   DialogPanel,
   DialogTitle,
   Textarea,
-  Transition,
 } from "@headlessui/react";
 import clsx from "clsx";
 import { api } from "~/trpc/react";
@@ -20,7 +19,6 @@ export default function AskQuestion() {
 
   const {
     mutate: askQuestion,
-    isPending,
     isSuccess,
     error,
   } = api.question.createQuestion.useMutation({
@@ -29,10 +27,6 @@ export default function AskQuestion() {
       setOpen(false);
     },
   });
-
-  useEffect(() => {
-    console.log({ isPending, isSuccess, error });
-  }, [isPending, isSuccess, error]);
 
   return (
     <>
@@ -46,9 +40,9 @@ export default function AskQuestion() {
         <Notificaition
           open={isSuccess}
           message={
-            !error
-              ? "Error asking question, please try again!"
-              : "Successfully asked question!"
+            isSuccess && !error
+              ? "Successfully asked question!"
+              : "Error asking question, please try again!"
           }
           type={isSuccess ? "success" : "error"}
         />
