@@ -19,9 +19,9 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable}`}>
       <body>
         <TRPCReactProvider>
-          <main className="min-h-screen bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+          <main className="flex flex-col items-center min-h-screen bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
             <TopNav />
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex-1 items-center justify-center p-4 self-stretch md:self-center md:max-w-screen-md">
               {children}
             </div>
           </main>

@@ -8,9 +8,11 @@ const TopNav = async () => {
 
   return (
     <div className="flex flex-col items-center justify-center py-8">
-      <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-        Ask <span className="text-[hsl(280,100%,70%)]">An</span> Alim
-      </h1>
+      <Link href="/">
+        <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+          Ask <span className="text-[hsl(280,100%,70%)]">An</span> Alim
+        </h1>
+      </Link>
       <div className="flex py-8">
         <AskQuestion />
         <Link
