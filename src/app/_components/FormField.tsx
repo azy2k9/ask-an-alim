@@ -68,7 +68,7 @@ const FormField = ({
             onChange={field.onChange}
           />
           <div className="absolute top-5 right-4 text-slate-500 hover:text-slate-600">
-            <button className="w-6" onClick={handleShowPassword}>
+            <button className="w-6" onClick={handleShowPassword} type="button">
               {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
             </button>
           </div>
