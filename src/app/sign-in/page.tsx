@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 
 const Signin = () => {
   const router = useRouter();
-
   const { handleSubmit, control } = useForm<SigninForm>({
     resolver: zodResolver(SigninSchema),
     mode: "onBlur",
@@ -25,10 +24,16 @@ const Signin = () => {
         const response = await signIn("credentials", {
           email,
           password,
+          // callbackUrl: "/",
           redirect: false,
         });
 
-        if (!response?.error && response?.ok) {
+        if (response?.error) {
+          // TODO: Display toast error
+          console.log(response.error);
+        }
+
+        if (response?.ok) {
           router.push("/");
           router.refresh();
         }
