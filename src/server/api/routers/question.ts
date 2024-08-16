@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { type AnsweredQuestions } from "~/types";
 
 export const questionRouter = createTRPCRouter({
@@ -16,7 +20,6 @@ export const questionRouter = createTRPCRouter({
 
     return answeredQuestions as AnsweredQuestions;
   }),
-
   createQuestion: publicProcedure
     .input(z.object({ question: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
@@ -29,7 +32,22 @@ export const questionRouter = createTRPCRouter({
         },
       });
     }),
-
+  getUsersAnsweredQuestions: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.question.findMany({
+      where: {
+        createdById: ctx.session.user.id,
+        status: "ANSWERED",
+      },
+    });
+  }),
+  getUsersUnansweredQuestions: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.question.findMany({
+      where: {
+        createdById: ctx.session.user.id,
+        status: "NOT_ANSWERED",
+      },
+    });
+  }),
   // getLatestQuestions: protectedProcedure.query(({ ctx }) => {
   //   if (ctx.session.user.role === "USER") {
   //     throw new Error(
