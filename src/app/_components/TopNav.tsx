@@ -2,9 +2,11 @@ import React from "react";
 import AskQuestion from "./AskQuestion";
 import Link from "next/link";
 import { getServerAuthSession } from "~/server/auth";
+import { Button } from "~/components/ui/button";
 
 const TopNav = async () => {
   const session = await getServerAuthSession();
+  const isSignedIn = session?.user.id;
 
   return (
     <div className="flex flex-col items-center justify-center py-8">
@@ -13,14 +15,27 @@ const TopNav = async () => {
           Ask <span className="text-[hsl(280,100%,70%)]">An</span> Alim
         </h1>
       </Link>
+
       <div className="flex py-8">
         <AskQuestion />
-        <Link
-          href={session ? "/api/auth/signout" : "/sign-in"}
-          className="mx-2 rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-        >
-          {session ? "Sign out" : "Sign in"}
-        </Link>
+        <Button asChild>
+          <Link
+            href={isSignedIn ? "/api/auth/signout" : "/sign-in"}
+            className="mx-2 bg-white/10 hover:bg-white/20"
+          >
+            {isSignedIn ? "Sign out" : "Sign in"}
+          </Link>
+        </Button>
+        {isSignedIn && (
+          <Button asChild>
+            <Link
+              href="/my-questions"
+              className="mx-2 bg-white/10 hover:bg-white/20"
+            >
+              My Questions
+            </Link>
+          </Button>
+        )}
       </div>
     </div>
   );

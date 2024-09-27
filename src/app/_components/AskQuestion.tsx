@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import {
-  Button,
   Dialog,
   DialogBackdrop,
   DialogPanel,
   DialogTitle,
   Textarea,
 } from "@headlessui/react";
+
+import { Button } from "../../components/ui/button";
 import clsx from "clsx";
 import { api } from "~/trpc/react";
 import Notificaition from "./Notificaition";
@@ -31,8 +32,8 @@ export default function AskQuestion() {
   return (
     <>
       <Button
+        className="mx-2 bg-white/10 hover:bg-white/20"
         onClick={() => setOpen((prev) => !prev)}
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
       >
         Ask a question
       </Button>
@@ -86,26 +87,22 @@ export default function AskQuestion() {
                 </div>
               </div>
               <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                <button
+                <Button
                   type="button"
                   onClick={() => askQuestion({ question })}
                   disabled={question.length === 0}
-                  className={
-                    question.length === 0
-                      ? "inline-flex w-full justify-center rounded-md bg-gray-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 sm:ml-3 sm:w-auto"
-                      : "inline-flex w-full justify-center rounded-md bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500 sm:ml-3 sm:w-auto"
-                  }
+                  className="bg-purple-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-purple-500 sm:ml-3 sm:w-auto"
                 >
                   Ask
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
                   data-autofocus
                   onClick={() => setOpen(false)}
-                  className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                  variant="destructive"
                 >
                   Cancel
-                </button>
+                </Button>
               </div>
             </DialogPanel>
           </div>
