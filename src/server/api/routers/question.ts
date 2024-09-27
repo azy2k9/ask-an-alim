@@ -1,3 +1,4 @@
+import { type Question } from "@prisma/client";
 import { z } from "zod";
 
 import {
@@ -5,7 +6,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { type AnsweredQuestions } from "~/types";
+import { type AnsweredQuestion, type AnsweredQuestions } from "~/types";
 
 export const questionRouter = createTRPCRouter({
   getAllAnsweredQuestions: publicProcedure.query(async ({ ctx }) => {
@@ -32,21 +33,28 @@ export const questionRouter = createTRPCRouter({
         },
       });
     }),
-  getUsersAnsweredQuestions: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db.question.findMany({
+  getUsersQuestions: protectedProcedure.query(async ({ ctx }) => {
+    const questions = await ctx.db.question.findMany({
       where: {
         createdById: ctx.session.user.id,
-        status: "ANSWERED",
       },
     });
-  }),
-  getUsersUnansweredQuestions: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db.question.findMany({
-      where: {
-        createdById: ctx.session.user.id,
-        status: "NOT_ANSWERED",
+
+    const categorisedQuestions = questions.reduce(
+      (accumlated, current) => {
+        if (current.status === "ANSWERED") {
+          accumlated.answered.push(current as AnsweredQuestion);
+        } else {
+          accumlated.unanswered.push(current);
+        }
+        return accumlated;
       },
-    });
+      {
+        answered: [] as AnsweredQuestions,
+        unanswered: [] as Array<Question>,
+      },
+    );
+    return categorisedQuestions;
   }),
   // getLatestQuestions: protectedProcedure.query(({ ctx }) => {
   //   if (ctx.session.user.role === "USER") {
