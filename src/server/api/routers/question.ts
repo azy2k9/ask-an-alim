@@ -1,7 +1,12 @@
+import { type Question } from "@prisma/client";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
-import { type AnsweredQuestions } from "~/types";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
+import { type AnsweredQuestion, type AnsweredQuestions } from "~/types";
 
 export const questionRouter = createTRPCRouter({
   getAllAnsweredQuestions: publicProcedure.query(async ({ ctx }) => {
@@ -16,7 +21,6 @@ export const questionRouter = createTRPCRouter({
 
     return answeredQuestions as AnsweredQuestions;
   }),
-
   createQuestion: publicProcedure
     .input(z.object({ question: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
@@ -29,7 +33,29 @@ export const questionRouter = createTRPCRouter({
         },
       });
     }),
+  getUsersQuestions: protectedProcedure.query(async ({ ctx }) => {
+    const questions = await ctx.db.question.findMany({
+      where: {
+        createdById: ctx.session.user.id,
+      },
+    });
 
+    const categorisedQuestions = questions.reduce(
+      (accumlated, current) => {
+        if (current.status === "ANSWERED") {
+          accumlated.answered.push(current as AnsweredQuestion);
+        } else {
+          accumlated.unanswered.push(current);
+        }
+        return accumlated;
+      },
+      {
+        answered: [] as AnsweredQuestions,
+        unanswered: [] as Array<Question>,
+      },
+    );
+    return categorisedQuestions;
+  }),
   // getLatestQuestions: protectedProcedure.query(({ ctx }) => {
   //   if (ctx.session.user.role === "USER") {
   //     throw new Error(
