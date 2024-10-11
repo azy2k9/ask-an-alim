@@ -7,6 +7,7 @@ import { Button } from "~/components/ui/button";
 const TopNav = async () => {
   const session = await getServerAuthSession();
   const isSignedIn = session?.user.id;
+  const isAdmin = session?.user.role === "ADMIN";
 
   return (
     <div className="flex flex-col items-center justify-center py-8">
@@ -18,14 +19,7 @@ const TopNav = async () => {
 
       <div className="flex py-8">
         <AskQuestion />
-        <Button asChild>
-          <Link
-            href={isSignedIn ? "/api/auth/signout" : "/sign-in"}
-            className="mx-2 bg-white/10 hover:bg-white/20"
-          >
-            {isSignedIn ? "Sign out" : "Sign in"}
-          </Link>
-        </Button>
+
         {isSignedIn && (
           <Button asChild>
             <Link
@@ -36,6 +30,24 @@ const TopNav = async () => {
             </Link>
           </Button>
         )}
+        {isAdmin && (
+          <Button asChild>
+            <Link
+              href="/answer-questions"
+              className="mx-2 bg-white/10 hover:bg-white/20"
+            >
+              Answer Questions
+            </Link>
+          </Button>
+        )}
+        <Button asChild>
+          <Link
+            href={isSignedIn ? "/api/auth/signout" : "/sign-in"}
+            className="mx-2 bg-white/10 hover:bg-white/20"
+          >
+            {isSignedIn ? "Sign out" : "Sign in"}
+          </Link>
+        </Button>
       </div>
     </div>
   );
